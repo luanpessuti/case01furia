@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nova+Square&display=swap');
+@import "tailwindcss";
+
+
+@theme inline {
+  --font-body: "Inter", sans-serif;
+  --font-title: "Nova Square", sans-serif;
+}
+
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+@layer base {
+  :root {
+    --background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+    --navbar: linear-gradient(to right, #111111 0%, #1a1a1a 100%);
+  }
+
+  body {
+    @apply min-h-screen bg-[var(--background)] bg-fixed text-stone-100;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* Animação sutil para o background */
+  body::before {
+    content: '';
+    @apply fixed inset-0 opacity-20;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.1) 0%, transparent 25%),
+      radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.1) 0%, transparent 25%);
+    animation: grain 8s steps(10) infinite;
+    pointer-events: none;
+  }
+
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-5%, -10%); }
+    30% { transform: translate(3%, -15%); }
+    50% { transform: translate(12%, 9%); }
+    70% { transform: translate(9%, 4%); }
+    90% { transform: translate(-1%, 7%); }
+  }
+}
+
+/* Efeito de brilho em elementos interativos */
+.hover-glow-effect {
+  @apply transition-all duration-300;
+}
+
+.hover-glow-effect:hover {
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-stone-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-amber-400/50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-amber-400/70;
+}
