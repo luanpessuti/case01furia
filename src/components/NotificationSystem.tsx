@@ -18,7 +18,6 @@ export function NotificationSystem({ onNotificationClick }: NotificationSystemPr
   const [showDropdown, setShowDropdown] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
 
-  // Exemplo de notificações iniciais
   useEffect(() => {
     const initialNotifications: Notification[] = [
       {
@@ -49,7 +48,7 @@ export function NotificationSystem({ onNotificationClick }: NotificationSystemPr
   };
 
   useEffect(() => {
-    const types = ['match', 'goal', 'result', 'info'];
+    const types: Notification['type'][] = ['match', 'goal', 'result', 'info'];
     const messages = [
       'FURIA marcou mais um ponto!',
       'FURIA vs LIQUID começa em 30 minutos',
@@ -62,7 +61,7 @@ export function NotificationSystem({ onNotificationClick }: NotificationSystemPr
       if (Math.random() > 0.8) {
         const newNotification: Notification = {
           id: Date.now(),
-          type: types[Math.floor(Math.random() * types.length)] as any,
+          type: types[Math.floor(Math.random() * types.length)],
           title: 'Nova Atualização',
           message: messages[Math.floor(Math.random() * messages.length)],
           timestamp: new Date(),
@@ -113,7 +112,7 @@ export function NotificationSystem({ onNotificationClick }: NotificationSystemPr
     }
   };
 
-  const getNotificationIcon = (type: string) => {
+  const getNotificationIcon = (type: Notification['type']) => {
     switch (type) {
       case 'match': return '🏆';
       case 'goal': return '🎯';
@@ -138,21 +137,21 @@ export function NotificationSystem({ onNotificationClick }: NotificationSystemPr
   return (
     <div className="relative">
       {/* Botão de notificações */}
-        <button
-          className="relative p-2 rounded-full hover:bg-stone-700 transition-colors"
-          onClick={() => setShowDropdown(!showDropdown)}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-          </svg>
+      <button
+        className="relative p-2 rounded-full hover:bg-stone-700 transition-colors"
+        onClick={() => setShowDropdown(!showDropdown)}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
 
-          {notificationCount > 0 && (
-            <span className="absolute top-0 right-0 bg-amber-400 text-stone-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-              {notificationCount}
-            </span>
-          )}
-        </button>
-    
+        {notificationCount > 0 && (
+          <span className="absolute top-0 right-0 bg-amber-400 text-stone-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            {notificationCount}
+          </span>
+        )}
+      </button>
+
       {/* Dropdown de notificações */}
       {showDropdown && (
         <div className="absolute right-0 mt-2 w-80 bg-stone-800 border border-amber-400/20 rounded-lg shadow-lg z-10 overflow-hidden">

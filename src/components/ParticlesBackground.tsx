@@ -2,12 +2,15 @@
 
 import { useEffect } from 'react';
 
+// Declare particlesJS as a global variable
+declare const particlesJS: any;
+
 export function ParticlesBackground() {
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
     script.onload = () => {
-      // @ts-ignore
+      // @@ts-expect-error
       particlesJS('particles-js', {
         particles: {
           number: { value: 40, density: { enable: true, value_area: 800 } },

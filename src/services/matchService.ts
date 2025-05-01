@@ -112,12 +112,6 @@ export interface MatchEvent {
     return event.replace("{opponent}", opponents[Math.floor(Math.random() * opponents.length)]);
   }
   
-  function getRandomTime(): string {
-    const minutes = Math.floor(Math.random() * 2);
-    const seconds = Math.floor(Math.random() * 60);
-    return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-  }
-  
   // Função para atualizar uma partida ao vivo
   function updateLiveMatch(match: Match): Match {
     if (match.status !== 'live') return match;

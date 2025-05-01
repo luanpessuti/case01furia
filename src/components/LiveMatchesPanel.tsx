@@ -13,8 +13,12 @@ export function LiveMatchesPanel() {
         const initialMatches = await matchService.getMatches();
         setMatches(initialMatches);
         setLoading(false);
-      } catch (err) {
-        setError('Erro ao carregar partidas');
+      }catch (error) {
+        if (error instanceof Error) {
+          console.error("Error:", error.message);
+        } else {
+          console.error("Error:", error);
+        }
         setLoading(false);
       }
     };
