@@ -5,7 +5,6 @@ import { matchService, Match } from '../services/matchService';
 export function LiveMatchesPanel() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMatches = async () => {
@@ -39,14 +38,6 @@ export function LiveMatchesPanel() {
           <div className="h-4 bg-stone-700 rounded w-3/4 mx-auto"></div>
           <div className="h-20 bg-stone-700/50 rounded"></div>
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-stone-800 rounded-lg p-4 text-center text-amber-400 border border-amber-400/20">
-        {error}
       </div>
     );
   }
