@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
+
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FuriaLogo } from '@/components/FuriaLogo';
-import { ParticlesBackground } from '@/components/ParticlesBackground';
 
 export default function RegisterPage() {
   const router = useRouter();

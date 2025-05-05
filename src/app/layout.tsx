@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} ${novaSquare.variable}`}>
       <body>
-      <AuthProvider>
+      <AuthProvider >
         <Navbar />
         <ParticlesBackground />
         <main className="min-h-screen pt-0 pb-0">
