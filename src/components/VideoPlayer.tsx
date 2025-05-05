@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -8,29 +9,48 @@ export function VideoPlayer() {
   const [volume, setVolume] = useState(0.5)
   const [isMuted, setIsMuted] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
+  const [duration, setDuration] = useState(0.1) // Inicialize com valor pequeno para evitar NaN
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showControls, setShowControls] = useState(true)
   const controlsTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Atualiza tempo e duração
+  // Configura todos os event listeners do vídeo
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
-    const updateTime = () => setCurrentTime(video.currentTime)
-    const updateDuration = () => setDuration(video.duration)
+    const handleLoadedMetadata = () => {
+      setDuration(video.duration || 0.1)
+    }
 
-    video.addEventListener('timeupdate', updateTime)
-    video.addEventListener('loadedmetadata', updateDuration)
-    video.addEventListener('ended', () => setIsPlaying(false))
+    const handleTimeUpdate = () => {
+      setCurrentTime(video.currentTime)
+    }
 
+    const handleEnded = () => {
+      setIsPlaying(false)
+    }
+
+    // Configura os listeners
+    video.addEventListener('loadedmetadata', handleLoadedMetadata)
+    video.addEventListener('timeupdate', handleTimeUpdate)
+    video.addEventListener('ended', handleEnded)
+
+    // Limpeza
     return () => {
-      video.removeEventListener('timeupdate', updateTime)
-      video.removeEventListener('loadedmetadata', updateDuration)
-      video.removeEventListener('ended', () => setIsPlaying(false))
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      video.removeEventListener('timeupdate', handleTimeUpdate)
+      video.removeEventListener('ended', handleEnded)
     }
   }, [])
+
+  // Atualiza a duração quando o vídeo é carregado
+  useEffect(() => {
+    const video = videoRef.current
+    if (video && video.readyState > 0) {
+      setDuration(video.duration || 0.1)
+    }
+  }, [videoRef.current?.src])
 
   // Esconder controles após inatividade
   useEffect(() => {
@@ -39,7 +59,7 @@ export function VideoPlayer() {
       if (controlsTimeout.current) {
         clearTimeout(controlsTimeout.current)
       }
-      
+
       controlsTimeout.current = setTimeout(() => {
         setShowControls(false)
       }, 3000)
@@ -88,7 +108,7 @@ export function VideoPlayer() {
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!videoRef.current || !progressRef.current) return
-    
+
     const rect = progressRef.current.getBoundingClientRect()
     const pos = (e.clientX - rect.left) / rect.width
     videoRef.current.currentTime = pos * videoRef.current.duration
@@ -96,7 +116,7 @@ export function VideoPlayer() {
 
   const toggleFullscreen = () => {
     if (!videoRef.current) return
-    
+
     if (!document.fullscreenElement) {
       videoRef.current.parentElement?.requestFullscreen()
       setIsFullscreen(true)
@@ -113,7 +133,7 @@ export function VideoPlayer() {
   }
 
   return (
-    <div className="relative w-full h-full group bg-stone-900 rounded-lg overflow-hidden border border-amber-400/30 shadow-lg">
+    <div className="relative w-full h-full group bg-stone-950 rounded-xl overflow-hidden border border-cyan-400/30 shadow-[0_0_30px_rgba(0,240,255,0.1)]">
       {/* Vídeo principal */}
       <video
         ref={videoRef}
@@ -123,94 +143,118 @@ export function VideoPlayer() {
         playsInline
         className="w-full h-full object-cover"
         onClick={togglePlay}
+        onLoadedMetadata={() => {
+          if (videoRef.current) {
+            setDuration(videoRef.current.duration || 0.1)
+          }
+        }}
       >
         <source src="/videos/furia-highlights.mp4" type="video/mp4" />
       </video>
 
-      {/* Barra de progresso */}
-      <div 
+      {/* Barra de progresso - ATUALIZADA */}
+      <div
         ref={progressRef}
-        className="absolute top-0 left-0 right-0 h-1 bg-stone-700/80 cursor-pointer group-hover:h-1.5 transition-all duration-200"
+        className="absolute top-0 left-0 right-0 h-1.5 bg-stone-800/80 cursor-pointer z-10 group-hover:h-2 transition-all duration-200"
         onClick={handleProgressClick}
       >
-        <div 
-          className="h-full bg-amber-400" 
-          style={{ width: `${(currentTime / duration) * 100}%` }}
+        <div
+          className="h-full bg-gradient-to-r from-cyan-400 to-pink-400 shadow-[0_0_8px_rgba(0,240,255,0.5)] transition-all duration-200"
+          style={{
+            width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%'
+          }}
         />
       </div>
 
+      {/* Overlay de brilho */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_rgba(0,240,255,0.03)_0%,_rgba(0,0,0,0)_70%)]" />
+
       {/* Controles customizados */}
-      <div 
-        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-stone-900/95 via-stone-900/80 to-transparent p-4 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
-      >
-        {/* Controles principais */}
-        <div className="flex items-center gap-3 mb-1">
-          {/* Botão Play/Pause */}
-          <button 
-            onClick={togglePlay}
-            className="text-amber-400 hover:text-amber-300 transition-colors p-1.5 rounded-full hover:bg-amber-400/10"
-            aria-label={isPlaying ? "Pausar" : "Reproduzir"}
+      <AnimatePresence>
+        {showControls && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-stone-950/95 via-stone-950/80 to-transparent p-4 z-10"
           >
-            {isPlaying ? (
-              <PauseIcon className="h-5 w-5" />
-            ) : (
-              <PlayIcon className="h-5 w-5" />
-            )}
-          </button>
+            {/* Controles principais */}
+            <div className="flex items-center gap-3 mb-1">
+              {/* Botão Play/Pause */}
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={togglePlay}
+                className="text-cyan-300 hover:text-pink-400 transition-colors p-1.5 rounded-full hover:bg-cyan-400/10 backdrop-blur-sm"
+                aria-label={isPlaying ? "Pausar" : "Reproduzir"}
+              >
+                {isPlaying ? (
+                  <PauseIcon className="h-5 w-5" />
+                ) : (
+                  <PlayIcon className="h-5 w-5" />
+                )}
+              </motion.button>
 
-          {/* Controle de Volume */}
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={toggleMute}
-              className="text-amber-400 hover:text-amber-300 transition-colors p-1.5 rounded-full hover:bg-amber-400/10"
-              aria-label={isMuted ? "Ativar som" : "Desativar som"}
-            >
-              {isMuted || volume === 0 ? (
-                <VolumeOffIcon className="h-4 w-4" />
-              ) : volume > 0.5 ? (
-                <VolumeUpIcon className="h-4 w-4" />
-              ) : (
-                <VolumeDownIcon className="h-4 w-4" />
-              )}
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="w-20 accent-amber-400 hover:accent-amber-300 cursor-pointer"
-              aria-label="Controle de volume"
-            />
-          </div>
+              {/* Controle de Volume */}
+              <div className="flex items-center gap-2">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={toggleMute}
+                  className="text-cyan-300 hover:text-pink-400 transition-colors p-1.5 rounded-full hover:bg-cyan-400/10 backdrop-blur-sm"
+                  aria-label={isMuted ? "Ativar som" : "Desativar som"}
+                >
+                  {isMuted || volume === 0 ? (
+                    <VolumeOffIcon className="h-4 w-4" />
+                  ) : volume > 0.5 ? (
+                    <VolumeUpIcon className="h-4 w-4" />
+                  ) : (
+                    <VolumeDownIcon className="h-4 w-4" />
+                  )}
+                </motion.button>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="w-20 accent-cyan-400 hover:accent-pink-400 cursor-pointer rounded-full h-1.5"
+                  aria-label="Controle de volume"
+                />
+              </div>
 
-          {/* Tempo decorrido */}
-          <div className="text-stone-300 text-xs font-mono tracking-tight ml-2">
-            <span>{formatTime(currentTime)}</span>
-            <span className="text-stone-500"> / </span>
-            <span>{formatTime(duration)}</span>
-          </div>
+              {/* Tempo decorrido */}
+              <div className="text-cyan-300 text-xs font-mono tracking-tighter ml-2">
+                <span>{formatTime(currentTime)}</span>
+                <span className="text-cyan-400/50"> / </span>
+                <span>{formatTime(duration)}</span>
+              </div>
 
-          {/* Botão Fullscreen */}
-          <button 
-            onClick={toggleFullscreen}
-            className="text-amber-400 hover:text-amber-300 transition-colors p-1.5 rounded-full hover:bg-amber-400/10 ml-auto"
-            aria-label={isFullscreen ? "Sair de tela cheia" : "Tela cheia"}
-          >
-            {isFullscreen ? (
-              <FullscreenExitIcon className="h-4 w-4" />
-            ) : (
-              <FullscreenIcon className="h-4 w-4" />
-            )}
-          </button>
-        </div>
-      </div>
+              {/* Botão Fullscreen */}
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={toggleFullscreen}
+                className="text-cyan-300 hover:text-pink-400 transition-colors p-1.5 rounded-full hover:bg-cyan-400/10 backdrop-blur-sm ml-auto"
+                aria-label={isFullscreen ? "Sair de tela cheia" : "Tela cheia"}
+              >
+                {isFullscreen ? (
+                  <FullscreenExitIcon className="h-4 w-4" />
+                ) : (
+                  <FullscreenIcon className="h-4 w-4" />
+                )}
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
 
-// Componentes de ícones com estilo condizente
+// Componentes de ícones atualizados
 function PlayIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 24 24">

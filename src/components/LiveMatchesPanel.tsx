@@ -12,12 +12,8 @@ export function LiveMatchesPanel() {
         const initialMatches = await matchService.getMatches();
         setMatches(initialMatches);
         setLoading(false);
-      }catch (error) {
-        if (error instanceof Error) {
-          console.error("Error:", error.message);
-        } else {
-          console.error("Error:", error);
-        }
+      } catch (error) {
+        console.error("Error:", error instanceof Error ? error.message : error);
         setLoading(false);
       }
     };
@@ -33,10 +29,10 @@ export function LiveMatchesPanel() {
 
   if (loading) {
     return (
-      <div className="bg-stone-800 rounded-lg p-4 text-center border border-amber-400/20">
+      <div className="rounded-lg p-4 text-center border border-pink-400/30 bg-gradient-to-br from-purple-500/10 to-stone-900/50">
         <div className="animate-pulse space-y-3">
-          <div className="h-4 bg-stone-700 rounded w-3/4 mx-auto"></div>
-          <div className="h-20 bg-stone-700/50 rounded"></div>
+          <div className="h-4 bg-gradient-to-r from-pink-400/20 to-cyan-400/20 rounded w-3/4 mx-auto"></div>
+          <div className="h-20 bg-gradient-to-br from-stone-800/50 to-stone-900/30 rounded border border-stone-700/50"></div>
         </div>
       </div>
     );
@@ -47,15 +43,18 @@ export function LiveMatchesPanel() {
   const finishedMatches = matches.filter(match => match.status === 'finished');
 
   return (
-    <div className="bg-stone-800 rounded-lg overflow-hidden border border-amber-400/30 shadow-lg">
-      {/* Cabeçalho */}
-      <div className="p-4 bg-gradient-to-r from-stone-750 to-stone-800 border-b border-amber-400/20">
-        <h3 className="font-title text-lg text-amber-400 flex items-center gap-2">
+    <div className="flex-1 rounded-lg overflow-y-auto border border-cyan-400/30 bg-gradient-to-br from-stone-900/80 to-stone-950/90 backdrop-blur-sm shadow-[0_0_20px_-5px_rgba(156,39,255,0.2)]">
+      {/* Cabeçalho com efeito neon */}
+      <div className="p-4 bg-gradient-to-r from-purple-500/15 to-cyan-400/15 border-b border-cyan-400/20 relative">
+        <div className="absolute inset-0 bg-black opacity-5" />
+        <h3 className="font-title text-lg font-bold flex items-center gap-2 relative">
           <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-400 shadow-[0_0_6px_#ff4ecd]"></span>
           </span>
-          PARTIDAS AO VIVO
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-cyan-400">
+            PARTIDAS AO VIVO
+          </span>
         </h3>
       </div>
 
@@ -63,30 +62,31 @@ export function LiveMatchesPanel() {
       <div className="p-4 space-y-4">
         {/* Partidas ao vivo */}
         {liveMatches.length === 0 ? (
-          <div className="text-center text-stone-400 py-4 bg-stone-800/50 rounded-lg border border-dashed border-amber-400/20">
-            Nenhuma partida ao vivo no momento
+          <div className="text-center text-stone-300 py-6 rounded-lg border-2 border-dashed border-cyan-400/20 bg-gradient-to-br from-stone-900/50 to-stone-800/30">
+            <div className="text-cyan-300/70 mb-2">⚡</div>
+            <p className="text-sm font-medium">Nenhuma partida ao vivo</p>
+            <p className="text-xs text-stone-400 mt-1">Verifique as próximas partidas abaixo</p>
           </div>
         ) : (
           liveMatches.map((match) => (
-            <LiveMatch
-              key={match.matchId}
-              {...match}
-            />
+            <LiveMatch key={match.matchId} {...match} />
           ))
         )}
 
         {/* Próximas partidas */}
         {upcomingMatches.length > 0 && (
           <div className="mt-6">
-            <div className="font-title text-sm text-amber-400 mb-3 pb-2 border-b border-amber-400/20">
-              PRÓXIMAS PARTIDAS
+            <div className="font-title text-sm font-medium mb-3 pb-2 border-b border-cyan-400/20 flex items-center">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-lime-400">
+                PRÓXIMAS PARTIDAS
+              </span>
+              <span className="ml-auto text-xs text-cyan-300/50 bg-cyan-400/10 px-2 py-1 rounded">
+                {upcomingMatches.length}
+              </span>
             </div>
             <div className="space-y-3">
               {upcomingMatches.map((match) => (
-                <LiveMatch
-                  key={match.matchId}
-                  {...match}
-                />
+                <LiveMatch key={match.matchId} {...match} />
               ))}
             </div>
           </div>
@@ -95,15 +95,17 @@ export function LiveMatchesPanel() {
         {/* Partidas finalizadas */}
         {finishedMatches.length > 0 && (
           <div className="mt-6">
-            <div className="font-title text-sm text-stone-400 mb-3 pb-2 border-b border-stone-600">
-              HISTÓRICO
+            <div className="font-title text-sm font-medium mb-3 pb-2 border-b border-purple-400/20 flex items-center">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+                HISTÓRICO
+              </span>
+              <span className="ml-auto text-xs text-purple-300/50 bg-purple-400/10 px-2 py-1 rounded">
+                {finishedMatches.length}
+              </span>
             </div>
             <div className="space-y-3">
               {finishedMatches.map((match) => (
-                <LiveMatch
-                  key={match.matchId}
-                  {...match}
-                />
+                <LiveMatch key={match.matchId} {...match} />
               ))}
             </div>
           </div>

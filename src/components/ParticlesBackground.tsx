@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-// Tipagem manual da função global particlesJS
 declare global {
   interface Window {
     particlesJS: (tagId: string, params: Record<string, unknown>) => void;
@@ -17,31 +16,72 @@ export function ParticlesBackground() {
       if (typeof window.particlesJS === 'function') {
         window.particlesJS('particles-js', {
           particles: {
-            number: { value: 40, density: { enable: true, value_area: 800 } },
-            color: { value: '#d4af37' },
-            opacity: { value: 0.5, random: true },
-            size: { value: 3, random: true },
+            number: { 
+              value: 60,
+              density: { 
+                enable: true, 
+                value_area: 800 
+              } 
+            },
+            color: { 
+              value: ['#00f0ff', '#ec4899', '#a855f7'] 
+            },
+            opacity: {
+              value: 0.5,
+              random: true,
+              anim: {
+                enable: true,
+                speed: 1,
+                opacity_min: 0.1,
+                sync: false
+              }
+            },
+            size: {
+              value: 2,
+              random: true,
+              anim: {
+                enable: true,
+                speed: 2,
+                size_min: 0.3,
+                sync: false
+              }
+            },
             line_linked: {
               enable: true,
-              distance: 150,
-              color: '#d4af37',
-              opacity: 0.2,
-              width: 1,
+              distance: 120, // Reduzi a distância
+              color: '#00f0ff',
+              opacity: 0.2, // Opacidade mais baixa
+              width: 0.8 // Linha mais fina
             },
             move: {
               enable: true,
-              speed: 2,
+              speed: 1.2, // Velocidade reduzida
               direction: 'none',
               random: true,
               straight: false,
               out_mode: 'out',
-            },
+              bounce: false
+            }
           },
           interactivity: {
+            detect_on: 'canvas',
             events: {
-              onhover: { enable: true, mode: 'repulse' },
+              onhover: {
+                enable: true,
+                mode: 'grab' // Modo mais sutil
+              },
+              resize: true
             },
+            modes: {
+              grab: {
+                distance: 140,
+                line_linked: {
+                  opacity: 0.5
+                }
+              }
+            }
           },
+          retina_detect: true
         });
       }
     };
@@ -55,7 +95,10 @@ export function ParticlesBackground() {
   return (
     <div
       id="particles-js"
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1]"
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
+      style={{
+        background: 'radial-gradient(ellipse at bottom, #0a0a0a 0%, #000000 100%)'
+      }}
     />
   );
 }

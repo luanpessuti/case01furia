@@ -3,33 +3,44 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 
+// Define the SenderType type
+type SenderType = 'fan' | 'system' | 'other';
+
 interface MessageBubbleProps {
-  sender: 'fan' | 'bot' | 'system' | 'command-help';
-  text: string | React.ReactNode;
-  timestamp?: Date;
+  sender: SenderType;
+  text: string;
+  timestamp: Date;
+  isCurrentUser?: boolean;
 }
 
-export function MessageBubble({ sender, text, timestamp }: MessageBubbleProps) {
+export function MessageBubble({ sender, text, timestamp, isCurrentUser = false }: MessageBubbleProps) {
   const getBubbleStyle = () => {
     switch (sender) {
       case 'fan':
-        return 'bg-amber-400/20 text-white border border-amber-400/30 rounded-tr-none';
-      case 'bot':
-        return 'bg-stone-700/80 text-white border border-stone-600 rounded-tl-none';
+        return 'bg-pink-900/30 border border-pink-800/50 rounded-lg p-3';
       case 'system':
-        return 'bg-stone-800 text-amber-300 border border-stone-600 text-center text-sm py-1 px-3';
+        return 'bg-cyan-900/20 border border-cyan-800/50 rounded-lg p-3';
       default:
-        return 'bg-stone-700 text-white';
+        return 'bg-stone-800/50 border border-stone-700 rounded-lg p-3';
     }
   };
 
-  const getTimestampStyle = () => {
-    return `text-xs mt-1 ${
+  const getTextStyle = (sender: SenderType) => {
+    switch (sender) {
+      case 'fan':
+        return 'text-pink-300';
+      case 'system':
+        return 'text-cyan-300';
+      default:
+        return 'text-stone-300';
+    }
+  };
+
+  const getTimestampStyle = (sender: SenderType) => {
+    return `text-xs mt-1 font-mono ${
       sender === 'fan' 
-        ? 'text-amber-300/80' 
-        : sender === 'bot' 
-          ? 'text-stone-400' 
-          : 'text-amber-400/70'
+        ? 'text-pink-400/60' 
+        : 'text-cyan-400/60'
     }`;
   };
 
@@ -37,14 +48,30 @@ export function MessageBubble({ sender, text, timestamp }: MessageBubbleProps) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className={`flex flex-col ${sender === 'fan' ? 'items-end' : 'items-start'} mb-2`}
+      transition={{ 
+        duration: 0.3,
+        ease: "easeOut"
+      }}
+      className={`flex flex-col ${sender === 'fan' ? 'items-end' : 'items-start'} mb-3 px-2`}
     >
-      <div className={`px-4 py-2 rounded-lg max-w-[85%] ${getBubbleStyle()}`}>
-        <div className="text-white/90">{text}</div>
+      <div className={`${getBubbleStyle()} relative overflow-hidden`}>
+        {/* Efeito de brilho sutil */}
+        <div className={`absolute inset-0 rounded-lg pointer-events-none ${
+          sender === 'fan'
+            ? 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-pink-400/5 to-transparent'
+            : 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-cyan-400/5 to-transparent'
+        }`} />
+        
+        <div className={`relative z-10 ${getTextStyle(sender)}`}>
+          {text}
+        </div>
+        
         {timestamp && (
-          <div className={getTimestampStyle()}>
-            {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          <div className={getTimestampStyle(sender)}>
+            {timestamp.toLocaleTimeString([], { 
+              hour: '2-digit', 
+              minute: '2-digit'
+            })}
           </div>
         )}
       </div>

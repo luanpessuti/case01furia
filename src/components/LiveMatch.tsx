@@ -1,6 +1,6 @@
 interface Team {
   name: string;
-  logo: string; // Agora esperamos uma URL para a logo
+  logo: string;
   score: number;
 }
 
@@ -32,120 +32,120 @@ export function LiveMatch({
   timeRemaining,
   lastEvents
 }: LiveMatchProps) {
-  const getStatusColor = () => {
+  const getStatusStyles = () => {
     switch (status) {
       case 'upcoming':
-        return 'bg-amber-400/80 text-stone-900';
+        return {
+          bg: 'bg-gradient-to-r from-lime-400/20 to-lime-400/10',
+          text: 'text-lime-400',
+          border: 'border-lime-400/30',
+          label: 'EM BREVE'
+        };
       case 'live':
-        return 'bg-red-500 text-white animate-pulse';
+        return {
+          bg: 'bg-gradient-to-r from-pink-500/20 to-pink-500/10',
+          text: 'text-pink-400',
+          border: 'border-pink-400/40',
+          label: 'AO VIVO',
+          pulse: 'animate-pulse'
+        };
       case 'finished':
-        return 'bg-stone-600 text-white';
+        return {
+          bg: 'bg-gradient-to-r from-purple-500/20 to-purple-500/10',
+          text: 'text-purple-400',
+          border: 'border-purple-400/30',
+          label: 'FINALIZADO'
+        };
     }
   };
 
-  const getStatusText = () => {
-    switch (status) {
-      case 'upcoming':
-        return 'EM BREVE';
-      case 'live':
-        return 'AO VIVO';
-      case 'finished':
-        return 'FINALIZADO';
-    }
-  };
+  const statusStyles = getStatusStyles();
 
   return (
-    <div className="bg-stone-800 rounded-lg overflow-hidden border border-amber-400/30 shadow-lg">
+    <div className={`rounded-xl border ${statusStyles.border} bg-gradient-to-br from-stone-900/50 to-stone-950/80 backdrop-blur-sm overflow-hidden shadow-[0_0_15px_-5px_var(--tw-shadow-color)] ${status === 'live' ? 'shadow-pink-400/20' : 'shadow-cyan-400/10'}`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-3 bg-gradient-to-r from-stone-750 to-stone-800 border-b border-amber-400/20">
-        <div className="text-xs font-title text-amber-400">PARTIDA #{matchId}</div>
-        <div className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor()}`}>
-          {getStatusText()}
-        </div>
+      <div className={`flex items-center justify-between px-4 py-3 border-b ${statusStyles.border} ${statusStyles.bg}`}>
+        <span className="text-xs font-title tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-pink-400">
+          PARTIDA #{matchId}
+        </span>
+        <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusStyles.text} ${statusStyles.pulse || ''} border ${statusStyles.border}`}>
+          {statusStyles.label}
+        </span>
       </div>
 
-      {/* Placar */}
-      <div className="p-4 bg-stone-800/50">
-        {/* Time 1 */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            {teams.team1.logo ? (
-              <img 
-                src={teams.team1.logo} 
-                alt={teams.team1.name}
-                className="w-10 h-10 object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/default-team-logo.png';
-                }}
-              />
-            ) : (
-              <div className="w-10 h-10 bg-stone-700 rounded-full flex items-center justify-center border border-amber-400/20">
-                <span className="text-xs">{teams.team1.name.charAt(0)}</span>
-              </div>
-            )}
-            <span className="font-title text-white">{teams.team1.name}</span>
+      {/* Teams and Scores */}
+      <div className="px-4 py-5 flex flex-col gap-4">
+        {[teams.team1, teams.team2].map((team, idx) => (
+          <div key={team.name} className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {team.logo ? (
+                <div className="relative">
+                  <img
+                    src={team.logo}
+                    alt={team.name}
+                    className="w-10 h-10 object-contain"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/default-team-logo.png';
+                    }}
+                  />
+                  <div className="absolute inset-0 rounded-full border border-cyan-400/20 pointer-events-none" />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-stone-800 to-stone-700 flex items-center justify-center text-white font-bold border border-stone-600">
+                  {team.name.charAt(0)}
+                </div>
+              )}
+              <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-stone-200 to-stone-100">
+                {team.name}
+              </span>
+            </div>
+            <span
+              className={`text-2xl font-bold ${
+                idx === 0 ? 'text-pink-400' : 'text-cyan-400'
+              }`}
+            >
+              {team.score}
+            </span>
           </div>
-          <span className="text-2xl font-bold text-amber-400">{teams.team1.score}</span>
-        </div>
+        ))}
+      </div>
 
-        {/* Time 2 */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {teams.team2.logo ? (
-              <img 
-                src={teams.team2.logo} 
-                alt={teams.team2.name}
-                className="w-10 h-10 object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/default-team-logo.png';
-                }}
-              />
-            ) : (
-              <div className="w-10 h-10 bg-stone-700 rounded-full flex items-center justify-center border border-amber-400/20">
-                <span className="text-xs">{teams.team2.name.charAt(0)}</span>
-              </div>
-            )}
-            <span className="font-title text-white">{teams.team2.name}</span>
-          </div>
-          <span className="text-2xl font-bold text-white">{teams.team2.score}</span>
+      {/* Match Info */}
+      <div className="px-4 pb-4 text-xs flex flex-col gap-2">
+        <div className="flex justify-between items-center">
+        <span className="text-stone-400">Mapa: <span className="text-cyan-300 font-medium">{map}</span></span>
         </div>
-
-      {/* Detalhes da partida */}
-      <div className="p-3 bg-stone-750 flex items-center justify-between text-sm border-t border-amber-400/10">
-        <div className="text-amber-400 font-title">
-          <span className="text-white">{map}</span>
-        </div>
-        {status === 'live' && (
-          <div className="text-stone-400">
-            Round: <span className="text-amber-400 font-bold">{currentRound}/{totalRounds}</span>
+        
+        {status === 'live' && currentRound && totalRounds && (
+          <div className="flex justify-between items-center">
+            <span className="text-stone-400">Rodada: <span className="font-medium text-pink-300">{currentRound} / {totalRounds}</span></span>
           </div>
         )}
-        {status === 'live' && timeRemaining && (
-          <div className="text-amber-400 font-mono bg-stone-700 px-2 py-1 rounded">
-            {timeRemaining}
+        
+        {status === 'upcoming' && timeRemaining && (
+          <div className="flex justify-between items-center">
+            <span className="text-stone-400">Começa em:</span>
+            <span className="font-medium text-lime-300">{timeRemaining}</span>
           </div>
         )}
       </div>
 
       {/* Últimos eventos */}
-      {lastEvents && lastEvents.length > 0 && (
-        <div className="max-h-40 overflow-y-auto border-t border-amber-400/10">
-          <div className="p-3 bg-stone-750 text-xs font-title text-amber-400">
-            ÚLTIMOS LANCES
+      {lastEvents?.length ? (
+        <div className={`px-4 py-3 border-t ${statusStyles.border} ${statusStyles.bg}`}>
+          <div className="text-xs font-body tracking-wider text-cyan-300 mb-2">
+            ÚLTIMOS EVENTOS:
           </div>
-          <ul className="divide-y divide-stone-700/50">
+          <ul className="space-y-2">
             {lastEvents.map((event) => (
-              <li key={event.id} className="p-3 text-sm hover:bg-stone-700/30 transition-colors">
-                <div className="flex items-start gap-2">
-                  <span className="text-amber-400/80 text-xs font-mono mt-0.5">{event.timestamp}</span>
-                  <span className="text-white/90">{event.text}</span>
-                </div>
+              <li key={event.id} className="flex justify-between items-center text-sm">
+                <span className="text-stone-300">{event.text}</span>
+                <span className="text-xs font-body text-stone-500">{event.timestamp}</span>
               </li>
             ))}
           </ul>
         </div>
-      )}
-    </div>
+      ) : null}
     </div>
   );
 }
