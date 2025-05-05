@@ -7,23 +7,21 @@ export async function POST() {
       { status: 200 }
     );
 
-    // Remove o cookie de autenticação de três maneiras diferentes para garantir
-    response.cookies.delete('auth_token');
+    // Remove o cookie de autenticação
     response.cookies.set({
       name: 'auth_token',
       value: '',
-      maxAge: -1,
+      maxAge: -1, // Expira imediatamente
       path: '/',
     });
-    response.headers.set('Set-Cookie', 'auth_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT');
 
-    // Adiciona cabeçalho para forçar atualização do estado
+    // Dispara evento para atualizar todos os componentes
     response.headers.set('X-Auth-Event', 'logout');
 
     return response;
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: 'Erro ao fazer logout' },
+      { success: false, error: 'An error occurred during logout.' },
       { status: 500 }
     );
   }

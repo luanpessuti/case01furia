@@ -91,9 +91,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (res.ok) {
-        await fetchUser();
-        window.dispatchEvent(new Event('storage'));
-        router.push('/');
+        setUser(await res.json());
+        setShouldCheckAuth(true); // Reativa
       }
     } catch (error) {
       console.error('Login error:', error);

@@ -71,7 +71,7 @@ export function Navbar() {
                   className="px-4 py-2 rounded-md text-sm font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center gap-2"
                   onClick={() => setShowUserMenu(!showUserMenu)}
                 >
-                  {user.name.split(' ')[0]}
+                 {user?.name?.split(' ')[0]}
                   <svg 
                     className={`w-4 h-4 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} 
                     fill="none" 
