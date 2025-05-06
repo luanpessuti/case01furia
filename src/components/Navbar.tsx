@@ -172,13 +172,12 @@ export function Navbar() {
               
               <div className="pt-2 mt-2 border-t border-stone-800">
                 <Link
-                  href="https://loja.furia.gg"
+                  href="https://furia.gg"
                   target="_blank"
                   className="px-3 py-2 mb-2 text-base font-medium text-cyan-300 hover:bg-cyan-400/10 rounded-md transition-colors flex items-center gap-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <span>LOJA OFICIAL</span>
-                  <span>🛒</span>
                 </Link>
                 
                 <Link
