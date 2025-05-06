@@ -149,7 +149,7 @@ export function Chat() {
           {/* Botão para exibir/ocultar o painel de partidas */}
           <button 
             onClick={togglePanel}
-            className="w-full py-2 text-sm z-50 font-title font-bold rounded-md bg-gradient-to-r from-purple-500/80 to-cyan-400/80 text-lime-400 hover:shadow-[0_0_10px_rgba(156,39,255,0.3)] transition-all"
+            className="w-full py-2 text-sm z-50 font-title bg-gradient-to-r from-cyan-400 to-lime-400 text-stone-900 font-bold rounded hover:shadow-[0_0_8px_rgba(0,240,255,0.3)] transition-all"
           >
             {isPanelVisible ? 'OCULTAR' : 'PAINEL DE PARTIDAS'}
           </button>
