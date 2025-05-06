@@ -136,7 +136,7 @@ export function Chat() {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-screen-lg mx-auto pt-10 sm:pt-6 lg:pt-8 gap-4 px-4 pb-4">
+    <div className="flex flex-col w-full max-w-screen-lg mx-auto pt-18 sm:pt-6 lg:pt-8 gap-4 px-4 pb-4">
       {/* Layout para dispositivos móveis */}
       {isMobile ? (
         <div className="flex flex-col gap-4">
