@@ -27,7 +27,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden sm:pt-10">
       <div className="relative z-10 w-full max-w-md">
         {/* Logo FURIA */}
         <div className="flex justify-center mb-8">

@@ -93,7 +93,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen text-stone-100 relative overflow-hidden">
+    <div className="min-h-screen text-stone-100 relative overflow-hidden pt-4 sm:pt-6 lg:pt-8">
       <div className="relative z-10 max-w-4xl mx-auto p-6">
         {/* Cabeçalho */}
         <div className="flex justify-between items-center mb-8">

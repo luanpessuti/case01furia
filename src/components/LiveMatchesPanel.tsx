@@ -43,7 +43,7 @@ export function LiveMatchesPanel() {
   const finishedMatches = matches.filter(match => match.status === 'finished');
 
   return (
-    <div className="flex-1 rounded-lg overflow-y-auto border border-cyan-400/30 bg-gradient-to-br from-stone-900/80 to-stone-950/90 backdrop-blur-sm shadow-[0_0_20px_-5px_rgba(156,39,255,0.2)]">
+    <div className="flex-1 rounded-lg overflow-y-auto border border-pink-400/50 bg-gradient-to-br from-stone-900/80 to-stone-950/90 backdrop-blur-sm shadow-[0_0_20px_-5px_rgba(156,39,255,0.2)]">
       {/* Cabeçalho com efeito neon */}
       <div className="p-4 bg-gradient-to-r from-purple-500/15 to-cyan-400/15 border-b border-cyan-400/20 relative">
         <div className="absolute inset-0 bg-black opacity-5" />

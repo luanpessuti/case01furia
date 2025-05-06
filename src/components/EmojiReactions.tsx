@@ -14,7 +14,7 @@ interface EmojiReactionsProps {
 export function EmojiReactions({ onReaction }: EmojiReactionsProps) {
   const [showPicker, setShowPicker] = useState(false);
   const [recentEmojis, setRecentEmojis] = useState<Emoji[]>([]);
-  
+
   // Emojis pré-definidos com tema FURIA (agora mais temáticos)
   const popularEmojis: Emoji[] = [
     { id: 'furia', symbol: '🐯', name: 'Tigre FURIA', count: 420 },
@@ -30,7 +30,7 @@ export function EmojiReactions({ onReaction }: EmojiReactionsProps) {
     { id: 'star', symbol: '🌟', name: 'Estrela', count: 65 },
     { id: 'skull', symbol: '💀', name: 'Skull', count: 54 },
   ];
-  
+
   // Animação de emojis aleatórios com estilo neon
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,51 +39,54 @@ export function EmojiReactions({ onReaction }: EmojiReactionsProps) {
         createFloatingEmoji(popularEmojis[randomIndex].symbol);
       }
     }, 3000);
-    
+
     return () => clearInterval(interval);
   }, []);
-  
+
   // Cria animação de emoji flutuante com efeito neon
   const createFloatingEmoji = (emoji: string) => {
     const emojiElement = document.createElement('div');
     emojiElement.textContent = emoji;
-    emojiElement.className = 'emoji-float text-2xl';
-    emojiElement.style.left = `${Math.random() * 80 + 10}%`;
-    emojiElement.style.textShadow = `0 0 8px rgba(199, 146, 234, 0.8)`;
-    
+    emojiElement.className = 'emoji-float text-xl';
+
+    // Posição horizontal mais controlada (0% a 100% dentro da área segura)
+    emojiElement.style.left = `${Math.random() * 100}%`;
+
+    // Efeito neon
+    emojiElement.style.textShadow = `0 0 10px rgba(34, 211, 238, 0.8)`;
+
     const container = document.getElementById('emoji-container');
     container?.appendChild(emojiElement);
-    
+
     setTimeout(() => {
       container?.removeChild(emojiElement);
     }, 2000);
   };
-  
+
   const sendReaction = (emoji: Emoji) => {
     createFloatingEmoji(emoji.symbol);
-    
+
     setRecentEmojis(prev => {
       const exists = prev.find(e => e.id === emoji.id);
       return exists ? prev : [emoji, ...prev].slice(0, 5);
     });
-    
+
     setShowPicker(false);
     onReaction?.(emoji.symbol);
   };
-  
+
   return (
     <div className="relative">
-      {/* Botão principal - estilo cyberpunk */}
+      {/* Botão principal compacto */}
       <button
-        className="bg-stone-900 hover:bg-stone-800 text-cyan-300 py-1.5 px-4 rounded-full flex items-center gap-2 text-sm transition-all border border-cyan-400/30 hover:border-cyan-400/60 shadow-[0_0_10px_rgba(34,211,238,0.1)] hover:shadow-[0_0_15px_rgba(34,211,238,0.3)]"
+        className="px-3 py-1.5 text-sm bg-gradient-to-r from-purple-500 to-pink-400 rounded hover:shadow-[0_0_8px_rgba(0,240,255,0.3)] transition-all"
         onClick={() => setShowPicker(!showPicker)}
       >
-        <span className="text-lg">👾</span>
-        <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
-          REAGIR
+        <span className="bg-clip-text text-base text-transparent bg-cyan-400">
+          💜
         </span>
       </button>
-      
+
       {/* Picker de emojis - estilo dark/neon */}
       {showPicker && (
         <div className="absolute bottom-12 left-0 transform bg-stone-900 border border-cyan-400/20 rounded-lg shadow-[0_0_20px_rgba(34,211,238,0.2)] p-3 w-80 z-20 backdrop-blur-md">
@@ -108,7 +111,7 @@ export function EmojiReactions({ onReaction }: EmojiReactionsProps) {
               <div className="border-t border-stone-800 mb-3"></div>
             </>
           )}
-          
+
           {/* Seção de populares */}
           <div className="text-xs text-purple-400 mb-2 font-mono tracking-wider">
             POPULARES
@@ -132,42 +135,42 @@ export function EmojiReactions({ onReaction }: EmojiReactionsProps) {
           </div>
         </div>
       )}
-      
+
       {/* Container para animações */}
-      <div 
-        id="emoji-container" 
-        className="absolute bottom-full left-0 w-full h-64 pointer-events-none overflow-hidden"
+      <div
+        id="emoji-container"
+        className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-[300%] h-48 pointer-events-none overflow-hidden"
+        style={{ marginLeft: '-100%' }}
       />
-      
+
       {/* Estilos de animação atualizados */}
       <style jsx global>{`
-        .emoji-float {
-          position: absolute;
-          bottom: 0;
-          animation: float 2s ease-out forwards;
-          opacity: 1;
-          pointer-events: none;
-          filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.7));
-          z-index: 10;
-        }
-        
-        @keyframes float {
-          0% {
-            transform: translateY(0) scale(0.5);
-            opacity: 0;
-          }
-          20% {
-            opacity: 1;
-            transform: translateY(-20px) scale(1.2);
-            filter: drop-shadow(0 0 12px rgba(192, 132, 252, 0.9));
-          }
-          100% {
-            transform: translateY(-150px) scale(1.5);
-            opacity: 0;
-            filter: drop-shadow(0 0 16px rgba(236, 72, 153, 0.6));
-          }
-        }
-      `}</style>
+  .emoji-float {
+    position: absolute;
+    bottom: 0;
+    animation: float 1.8s ease-out forwards;
+    opacity: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 0 8px rgba(34,211,238,0.9));
+    z-index: 10;
+    transform: translateX(-50%); /* Centraliza o emoji na posição left */
+  }
+  
+  @keyframes float {
+    0% { 
+      transform: translateY(0) translateX(-50%) scale(0.5); 
+      opacity: 0; 
+    }
+    20% { 
+      opacity: 1; 
+      transform: translateY(-15px) translateX(-50%) scale(1.1); 
+    }
+    100% { 
+      transform: translateY(-120px) translateX(-50%) scale(1.3); 
+      opacity: 0; 
+    }
+  }
+`}</style>
     </div>
   );
 }

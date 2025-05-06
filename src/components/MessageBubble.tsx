@@ -28,11 +28,11 @@ export function MessageBubble({ sender, text, timestamp, isCurrentUser = false }
   const getTextStyle = (sender: SenderType) => {
     switch (sender) {
       case 'fan':
-        return 'text-pink-300';
+        return 'text-xs text-pink-300';
       case 'system':
-        return 'text-cyan-300';
+        return 'text-xs text-cyan-300';
       default:
-        return 'text-stone-300';
+        return 'text-xs text-stone-300';
     }
   };
 

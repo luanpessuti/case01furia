@@ -28,7 +28,7 @@ export function Navbar() {
         : 'bg-stone-950/80 backdrop-blur-md border-b border-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-12">
           {/* Logo */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -36,8 +36,8 @@ export function Navbar() {
             className="flex-shrink-0 flex items-center"
           >
             <Link href="/" className="flex items-center" onClick={() => setIsMobileMenuOpen(false)}>
-              <FuriaLogo className="h-8 text-pink-400 hover:text-cyan-400 transition-colors" />
-              <span className="ml-2 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-cyan-400">
+              <FuriaLogo className="h-6 text-pink-400 hover:text-cyan-400 transition-colors" />
+              <span className="ml-2 text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-cyan-400">
                 FURIA
               </span>
             </Link>
@@ -56,19 +56,19 @@ export function Navbar() {
               <Link 
                 href="https://furia.gg" 
                 target="_blank"
-                className="px-3 py-1.5 rounded-md text-sm font-bold border border-cyan-400/40 text-cyan-300 hover:bg-cyan-400/10 hover:border-cyan-400/60 transition-all flex items-center gap-1"
+                className="px-3 py-1 text-sm font-bold border border-cyan-400/40 text-cyan-300 hover:bg-cyan-400/10 hover:border-cyan-400/60 rounded-md transition-all flex items-center gap-1"
               >
                 <span>LOJA OFICIAL</span>
               </Link>
             </motion.div>
             
             {loading ? (
-              <div className="h-8 w-20 bg-stone-800 rounded-md animate-pulse"></div>
+              <div className="h-6 w-20 bg-stone-800 rounded-md animate-pulse"></div>
             ) : user ? (
               <div className="relative">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
-                  className="px-4 py-2 rounded-md text-sm font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center gap-2"
+                  className="px-3 py-1.5 rounded-md text-sm font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center gap-2"
                   onClick={() => setShowUserMenu(!showUserMenu)}
                 >
                  {user?.name?.split(' ')[0]}
@@ -115,7 +115,7 @@ export function Navbar() {
               <motion.div whileHover={{ scale: 1.05 }}>
                 <Link 
                   href="/login" 
-                  className="px-4 py-2 rounded-md text-sm font-bold bg-gradient-to-r from-cyan-400 to-lime-400 text-stone-900 hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all"
+                  className="px-4 py-1.5 rounded-md text-sm font-bold bg-gradient-to-r from-cyan-400 to-lime-400 text-stone-900 hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all"
                 >
                   LOGIN
                 </Link>
@@ -163,7 +163,7 @@ export function Navbar() {
                 <Link
                   key={item.text}
                   href={item.href}
-                  className="block px-3 py-3 text-base font-medium text-stone-300 hover:text-pink-400 hover:bg-stone-800/50 rounded-md transition-colors"
+                  className="block px-3 py-2 text-base font-medium text-stone-300 hover:text-pink-400 hover:bg-stone-800/50 rounded-md transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.text}
@@ -174,7 +174,7 @@ export function Navbar() {
                 <Link
                   href="https://loja.furia.gg"
                   target="_blank"
-                  className="px-3 py-3 mb-2 text-base font-medium text-cyan-300 hover:bg-cyan-400/10 rounded-md transition-colors flex items-center gap-2"
+                  className="px-3 py-2 mb-2 text-base font-medium text-cyan-300 hover:bg-cyan-400/10 rounded-md transition-colors flex items-center gap-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <span>LOJA OFICIAL</span>
@@ -183,7 +183,7 @@ export function Navbar() {
                 
                 <Link
                   href="/login"
-                  className="block px-3 py-3 text-center text-base font-bold bg-gradient-to-r from-cyan-400 to-lime-400 text-stone-900 rounded-md"
+                  className="block px-3 py-2 text-center text-base font-bold bg-gradient-to-r from-cyan-400 to-lime-400 text-stone-900 rounded-md"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   LOGIN
@@ -197,13 +197,12 @@ export function Navbar() {
   );
 }
 
-// Componente auxiliar para os links de navegação
 function NavLink({ href, text, isActive = false }: { href: string; text: string; isActive?: boolean }) {
   return (
     <motion.div whileHover={{ scale: 1.05 }}>
       <Link
         href={href}
-        className={`px-3 py-2 text-sm font-medium transition-all relative ${
+        className={`px-3 py-1 text-sm font-medium transition-all relative ${
           isActive 
             ? 'text-cyan-300 font-bold' 
             : 'text-stone-300 hover:text-pink-300'

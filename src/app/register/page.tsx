@@ -82,7 +82,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden sm:mt-16">
       
       <div className="relative z-10 w-full max-w-md">
         {/* Cabeçalho */}
@@ -196,7 +196,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Informações sobre verificação */}
-        <div className="mt-6 p-4 border border-purple-400/30 rounded-lg bg-stone-900/50 backdrop-blur-sm">
+        <div className="mt-6 p-4 border border-purple-400/30 rounded-lg bg-stone-900/50 backdrop-blur-sm sm:mb-10">
           <h3 className="text-sm font-bold text-purple-300 flex items-center gap-2">
             <span>🔒</span> VERIFICAÇÃO DE PERFIL (NÍVEL 2)
           </h3>
